@@ -17,7 +17,7 @@
 		"build": "next build",
 		"start": "next start",
 		"coverage": "nyc npm run test",
-		"postinstall": "prisma generate",
+		"postinstall": "prisma generate"
 	},
 	"pre-commit": [
 		"lint:fix",
