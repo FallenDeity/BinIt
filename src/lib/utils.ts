@@ -47,3 +47,24 @@ export const CloudinaryTheme = {
 		},
 	},
 };
+
+export const meta = {
+	title: "Binit",
+	description: "A responsive and modern real-time waste management system made with Next.js, Sockets, and Prisma.",
+	keywords: ["Binit", "Infofest", "Next.js", "Sockets", "Prisma"],
+	authors: [{ name: "FallenDeity" }],
+	metadataBase: new URL(String(process.env.NEXT_PUBLIC_BASE_URL)),
+	robots: {
+		follow: true,
+		index: false,
+		nocache: true,
+	},
+	openGraph: {
+		title: "Binit",
+		description:
+			"A responsive and modern real-time waste management system made with Next.js, Sockets, and Prisma.",
+		images: "/logo.png",
+		type: "website",
+	},
+	themeColor: "#03fc35",
+};

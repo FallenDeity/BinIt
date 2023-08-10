@@ -1,8 +1,12 @@
 "use client";
 
+import "react-toastify/dist/ReactToastify.css";
+
 import { User } from "@prisma/client";
 import Lottie from "lottie-react";
+import { useTheme } from "next-themes";
 import React from "react";
+import { ToastContainer } from "react-toastify";
 
 import getCurrentUser from "@/actions/getCurrentUser";
 import animationData from "@/assets/animation_ll4wg20p.json";
@@ -12,6 +16,9 @@ import ContractorBoard from "./ContractorBoard";
 import UserBoard from "./UserBoard";
 
 export default function Board(): React.JSX.Element {
+	const { systemTheme, theme } = useTheme();
+	const currentTheme = theme === "system" ? systemTheme : theme;
+	const isDark = currentTheme === "dark";
 	const [user, setUser] = React.useState<User | null>(null);
 	const pusherKey = React.useMemo(() => user?.id, [user?.id]);
 	React.useEffect(() => {
@@ -21,7 +28,6 @@ export default function Board(): React.JSX.Element {
 		if (!pusherKey) return;
 		pusherClient.subscribe(pusherKey);
 		const updateHandler = (data: { updateUser: User }): void => {
-			console.log(data, "updateUser");
 			setUser(data.updateUser);
 		};
 		pusherClient.bind("user:update", updateHandler);
@@ -30,7 +36,6 @@ export default function Board(): React.JSX.Element {
 			pusherClient.unsubscribe(pusherKey);
 		};
 	}, [pusherKey]);
-	console.log(user);
 	return (
 		<>
 			{user ? (
@@ -44,6 +49,13 @@ export default function Board(): React.JSX.Element {
 					<Lottie animationData={animationData} loop={true} height={50} width={50} />
 				</div>
 			)}
+			<ToastContainer
+				position="top-center"
+				autoClose={5000}
+				closeOnClick
+				pauseOnFocusLoss
+				theme={isDark ? "dark" : "light"}
+			/>
 		</>
 	);
 }

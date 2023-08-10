@@ -51,8 +51,8 @@ export default function UserBoard(): React.JSX.Element {
 	}, [user, userReports]);
 	React.useEffect(() => {
 		pusherClient.subscribe("dump");
-		const newHandler = (dump: Dump): void => {
-			setUserReports((userReports) => [dump, ...userReports]);
+		const newHandler = (dump: { newDump: Dump }): void => {
+			setUserReports((userReports) => [dump.newDump, ...userReports]);
 		};
 		pusherClient.bind("dump:new", newHandler);
 		return () => {
@@ -63,8 +63,10 @@ export default function UserBoard(): React.JSX.Element {
 	React.useEffect(() => {
 		if (!pusherKey) return;
 		pusherClient.subscribe(pusherKey);
-		const updateHandler = (dump: Dump): void => {
-			setUserReports((userReports) => userReports.map((report) => (report.id === dump.id ? dump : report)));
+		const updateHandler = (dump: { updatedDump: Dump }): void => {
+			setUserReports((userReports) =>
+				userReports.map((report) => (report.id === dump.updatedDump.id ? dump.updatedDump : report))
+			);
 		};
 		pusherClient.bind("dump:update", updateHandler);
 		return () => {
@@ -137,7 +139,7 @@ export default function UserBoard(): React.JSX.Element {
 												if (loading) return;
 												setLoading(true);
 												void axios
-													.post("/api/contractor", { userId: user?.id })
+													.post("/api/contractor", { userId: user.id })
 													.then(() => toast.success("Registered as a contractor!"))
 													.catch(() => toast.error("Something went wrong!"))
 													.finally(() => {
@@ -255,7 +257,7 @@ export default function UserBoard(): React.JSX.Element {
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
 								<Card className="col-span-4">
 									<CardHeader>
-										<CardTitle>Overview</CardTitle>
+										<CardTitle>Reports</CardTitle>
 									</CardHeader>
 									<CardContent className="pl-2">
 										<Overview dumps={userReports} />
@@ -263,7 +265,7 @@ export default function UserBoard(): React.JSX.Element {
 								</Card>
 								<Card className="col-span-3">
 									<CardHeader>
-										<CardTitle>Recent Reports</CardTitle>
+										<CardTitle>Claimed Reports</CardTitle>
 										<CardDescription>
 											You made {totalReportsThisMonth()} reports this month
 										</CardDescription>

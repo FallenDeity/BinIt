@@ -34,7 +34,8 @@ let data = [
 	},
 ];
 
-export function Overview({ dumps }: { dumps: Dump[] }): React.JSX.Element {
+export function ContractorOverview({ dumps }: { dumps: Dump[] }): React.JSX.Element {
+	console.log(dumps);
 	if (dumps.length) {
 		const today = new Date();
 		const day = today.getDay();
@@ -45,13 +46,15 @@ export function Overview({ dumps }: { dumps: Dump[] }): React.JSX.Element {
 		const new_week = week.slice(day + 1).concat(week.slice(0, day + 1));
 		const weekDates = new_week.map((day) => new Date(today.setDate(day)));
 		const dumpCount = weekDates.map(
-			(day) => dumps.filter((dump) => new Date(dump.createdAt).getDate() === day.getDate()).length
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			(day) => dumps.filter((dump) => new Date(dump.updatedAt).getDate() === day.getDate()).length
 		);
 		data = weekDates.map((day, index) => ({
 			name: day.toLocaleString("default", { weekday: "short" }),
 			total: dumpCount[index],
 		}));
 	}
+	console.log(data);
 	return (
 		<ResponsiveContainer width="100%" height={350}>
 			<BarChart data={data}>
@@ -63,7 +66,7 @@ export function Overview({ dumps }: { dumps: Dump[] }): React.JSX.Element {
 					axisLine={false}
 					tickFormatter={(value): string => `${String(value)}`}
 				/>
-				<Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]} />
+				<Bar dataKey="total" fill="#5a16e2" radius={[4, 4, 0, 0]} />
 			</BarChart>
 		</ResponsiveContainer>
 	);

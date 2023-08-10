@@ -19,12 +19,9 @@ export async function POST(request: Request): Promise<NextResponse> {
 			where: {
 				id: body.dumpId,
 			},
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
 			data: {
-				assignedToId: body.assignedToId,
+				updatedAt: new Date(),
 				completed: true,
-				completedById: body.assignedToId,
 				completedBy: {
 					connect: {
 						id: body.assignedToId,

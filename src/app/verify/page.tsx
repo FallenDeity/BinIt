@@ -1,6 +1,10 @@
+import { Metadata } from "next";
 import React from "react";
 
 import Verification from "@/components/Verify";
+import { meta } from "@/lib/utils";
+
+export const metadata: Metadata = meta;
 
 interface VerifyPageProps {
 	searchParams: {

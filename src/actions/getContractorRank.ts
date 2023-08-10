@@ -13,7 +13,7 @@ interface Rank {
 	total: number;
 }
 
-const getUserRank = async (): Promise<Rank> => {
+const getContractorRank = async (): Promise<Rank> => {
 	const currentUser = await getCurrentUser();
 
 	if (!currentUser?.id) {
@@ -23,7 +23,7 @@ const getUserRank = async (): Promise<Rank> => {
 	try {
 		const total = await prisma.user.count({
 			where: {
-				isContractor: false,
+				isContractor: true,
 			},
 		});
 		const rank =
@@ -31,9 +31,10 @@ const getUserRank = async (): Promise<Rank> => {
 				where: {
 					dumps: {
 						some: {
-							userId: currentUser.id,
+							completedById: currentUser.id,
 						},
 					},
+					isContractor: true,
 				},
 			})) || 1;
 		return { rank, total };
@@ -43,4 +44,4 @@ const getUserRank = async (): Promise<Rank> => {
 	}
 };
 
-export default getUserRank;
+export default getContractorRank;

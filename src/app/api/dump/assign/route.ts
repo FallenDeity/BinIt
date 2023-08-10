@@ -19,16 +19,17 @@ export async function POST(request: Request): Promise<NextResponse> {
 			where: {
 				id: body.dumpId,
 			},
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
 			data: {
-				assignedToId: body.assignedToId,
+				updatedAt: new Date(),
 				assignedTo: {
 					connect: {
 						id: body.assignedToId,
 					},
 				},
 			},
+		});
+		await pusherServer.trigger("removed", "dump:update", {
+			updatedDump,
 		});
 		await pusherServer.trigger(body.userId, "dump:update", {
 			updatedDump,
