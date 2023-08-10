@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { getAddress } from "@/actions/getAddress";
 import getCurrentUser from "@/actions/getCurrentUser";
 import { prisma } from "@/lib/prisma";
 import { pusherServer } from "@/lib/pusher";
@@ -9,30 +8,35 @@ export async function POST(request: Request): Promise<NextResponse> {
 	try {
 		const currentUser = await getCurrentUser();
 		const body = (await request.json()) as {
-			location: string;
-			image: string;
+			dumpId: string;
 			userId: string;
+			assignedToId: string;
 		};
-		const description = await getAddress(body.location);
-		const { location, image, userId } = body;
 		if (!currentUser?.id || !currentUser.email) {
 			return new NextResponse("Unauthorized", { status: 401 });
 		}
-		const newDump = await prisma.dump.create({
+		const updatedDump = await prisma.dump.update({
+			where: {
+				id: body.dumpId,
+			},
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-expect-error
 			data: {
-				location,
-				image,
-				userId,
-				description,
-			},
-			include: {
-				user: true,
+				assignedToId: body.assignedToId,
+				assignedTo: {
+					connect: {
+						id: body.assignedToId,
+					},
+				},
 			},
 		});
-		await pusherServer.trigger("dump", "dump:new", {
-			newDump,
+		await pusherServer.trigger(body.userId, "dump:update", {
+			updatedDump,
 		});
-		return NextResponse.json(newDump);
+		await pusherServer.trigger(body.assignedToId, "dump:update", {
+			updatedDump,
+		});
+		return NextResponse.json(updatedDump);
 	} catch (error) {
 		console.log(error, "ERROR_MESSAGES");
 		return new NextResponse("Error", { status: 500 });

@@ -1,59 +1,56 @@
 "use client";
 
+import { Dump } from "@prisma/client";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-const data = [
+let data = [
 	{
-		name: "Jan",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Mon",
+		total: 0,
 	},
 	{
-		name: "Feb",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Tue",
+		total: 0,
 	},
 	{
-		name: "Mar",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Wed",
+		total: 0,
 	},
 	{
-		name: "Apr",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Thu",
+		total: 0,
 	},
 	{
-		name: "May",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Fri",
+		total: 0,
 	},
 	{
-		name: "Jun",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Sat",
+		total: 0,
 	},
 	{
-		name: "Jul",
-		total: Math.floor(Math.random() * 5000) + 1000,
-	},
-	{
-		name: "Aug",
-		total: Math.floor(Math.random() * 5000) + 1000,
-	},
-	{
-		name: "Sep",
-		total: Math.floor(Math.random() * 5000) + 1000,
-	},
-	{
-		name: "Oct",
-		total: Math.floor(Math.random() * 5000) + 1000,
-	},
-	{
-		name: "Nov",
-		total: Math.floor(Math.random() * 5000) + 1000,
-	},
-	{
-		name: "Dec",
-		total: Math.floor(Math.random() * 5000) + 1000,
+		name: "Sun",
+		total: 0,
 	},
 ];
 
-export function Overview(): React.JSX.Element {
+export function Overview({ dumps }: { dumps: Dump[] }): React.JSX.Element {
+	if (dumps.length) {
+		const today = new Date();
+		const day = today.getDay();
+		const week = [];
+		for (let i = 0; i < 7; i++) {
+			week.push(today.getDate() - day + i);
+		}
+		const weekDates = week.map((day) => new Date(today.setDate(day)));
+		const dumpCount = weekDates.map(
+			(day) => dumps.filter((dump) => dump.createdAt.getDate() === day.getDate()).length
+		);
+		data = weekDates.map((day, index) => ({
+			name: day.toLocaleString("default", { weekday: "short" }),
+			total: dumpCount[index],
+		}));
+	}
 	return (
 		<ResponsiveContainer width="100%" height={350}>
 			<BarChart data={data}>
@@ -63,7 +60,7 @@ export function Overview(): React.JSX.Element {
 					fontSize={12}
 					tickLine={false}
 					axisLine={false}
-					tickFormatter={(value): string => `$${String(value)}`}
+					tickFormatter={(value): string => `${String(value)}`}
 				/>
 				<Bar dataKey="total" fill="#adfa1d" radius={[4, 4, 0, 0]} />
 			</BarChart>

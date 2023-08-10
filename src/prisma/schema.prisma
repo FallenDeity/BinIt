@@ -55,6 +55,7 @@ model Dump {
   updatedAt       DateTime @updatedAt
   location        String
   image           String
+  description     String
   completed       Boolean @default(false)
 
   userId String @db.ObjectId
