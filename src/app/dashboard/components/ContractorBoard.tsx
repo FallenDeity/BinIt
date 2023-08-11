@@ -72,12 +72,18 @@ export default function ContractorBoard(): React.JSX.Element {
 		const updateHandler = (dump: { updatedDump: Dump }): void => {
 			if (!userReports.find((report) => report.id === dump.updatedDump.id)) {
 				setUserReports((userReports) => [dump.updatedDump, ...userReports]);
+				const reportMap = new Map<string, Dump>();
+				userReports.forEach((report) => reportMap.set(report.id, report));
+				setUserReports([...reportMap.values()]);
 			}
 			setUserReports((userReports) =>
 				userReports.map((report) => (report.id === dump.updatedDump.id ? dump.updatedDump : report))
 			);
 			if (!userTasks.find((task) => task.id === dump.updatedDump.id)) {
 				setUserTasks((userTasks) => [dump.updatedDump, ...userTasks]);
+				const reportMap = new Map<string, Dump>();
+				userTasks.forEach((report) => reportMap.set(report.id, report));
+				setUserTasks([...reportMap.values()]);
 			}
 			setUserTasks((userTasks) =>
 				userTasks.map((report) => (report.id === dump.updatedDump.id ? dump.updatedDump : report))
