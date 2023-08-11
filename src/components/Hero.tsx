@@ -1,15 +1,21 @@
 "use client";
 
+import { User } from "@prisma/client";
 import Lottie from "lottie-react";
 import React, { Suspense } from "react";
-import { BiRightArrowAlt } from "react-icons/bi";
+import { BiLogIn, BiRightArrowAlt } from "react-icons/bi";
 
+import getCurrentUser from "@/actions/getCurrentUser";
 import Loader from "@/assets/animation_ll4wg20p.json";
 import animationData from "@/assets/animation_ll52lmkh.json";
 import { MainNav } from "@/components/Dashboard/main-nav";
 import { UserNav } from "@/components/Dashboard/user-nav";
 
 export default function Hero(): React.JSX.Element {
+	const [user, setUser] = React.useState<User | null>(null);
+	React.useEffect(() => {
+		void getCurrentUser().then((user) => setUser(user));
+	}, []);
 	return (
 		<>
 			<span className="[&>svg]:absolute [&>svg]:-z-10 [&>svg]:m-auto [&>svg]:block [&>svg]:w-full">
@@ -86,7 +92,16 @@ export default function Hero(): React.JSX.Element {
 				<div className="flex h-16 items-center px-4">
 					<MainNav className="mx-6" />
 					<div className="ml-auto flex items-center space-x-6">
-						<UserNav />
+						{user ? (
+							<UserNav />
+						) : (
+							<a
+								href="/"
+								className="relative flex flex-row items-center justify-center rounded-md bg-blue-500 px-2 py-1.5 transition-all duration-300 ease-in-out hover:bg-blue-600">
+								<BiLogIn className="mr-2 h-5 w-5" />
+								Login
+							</a>
+						)}
 					</div>
 				</div>
 			</div>
