@@ -28,6 +28,10 @@ export async function POST(request: Request): Promise<NextResponse> {
 					},
 				},
 			},
+			include: {
+				assignedTo: true,
+				completedBy: true,
+			},
 		});
 		await pusherServer.trigger(body.userId, "dump:update", {
 			updatedDump,

@@ -18,7 +18,12 @@ const getTasks = async (): Promise<Dump[]> => {
 
 	try {
 		// dumps where assignedToId is null or does not exist
-		let dumps = await prisma.dump.findMany();
+		let dumps = await prisma.dump.findMany({
+			include: {
+				assignedTo: true,
+				completedBy: true,
+			},
+		});
 		dumps = dumps.filter((dump) => dump.assignedToId === null);
 		return dumps;
 	} catch (error) {
