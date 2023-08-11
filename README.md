@@ -1,15 +1,17 @@
-<p align="center"><img src="./public/logo.png" alt="Logo" width="300" height="300"></p>
+<p align="center"><img src="./public/logo.png" alt="Logo" width="200" height="200"></p>
 <h1 align="center">Binit</h1>
 <h4 align="center">Your Goa, Our Commitment.</h4>
 
 # Features
 - [x] Responsive and mobile friendly UI.
 - [x] Dark and light mode.
-- [x] Sanity (CMS) Integration.
-- [x] Contact using SMTP Email Server.
-- [x] REST API for CRUD operations.
-- [x] Realtime updates.
+- [x] NodeMailer Email authentication
+- [x] Google Map/Github OAuth
+- [x] Realtime communication.
 - [x] Google Map integration.
+- [x] Real-time waste collection monitoring
+- [x] 2-way ranking system(user/contractor)
+- [x] Real-time monitoring of tickets claimed/completed by contractors  
 
 # Production
 
