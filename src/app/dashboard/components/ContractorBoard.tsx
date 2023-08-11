@@ -100,6 +100,17 @@ export default function ContractorBoard(): React.JSX.Element {
 			pusherClient.unsubscribe("removed");
 		};
 	}, []);
+	React.useEffect(() => {
+		pusherClient.subscribe("dump");
+		const newHandler = (dump: { newDump: Dump }): void => {
+			setTasks((tasks) => [dump.newDump, ...tasks]);
+		};
+		pusherClient.bind("dump:new", newHandler);
+		return () => {
+			pusherClient.unbind("dump:new", newHandler);
+			pusherClient.unsubscribe("dump");
+		};
+	}, []);
 	const completeTask = (userId: string, dumpId: string): void => {
 		if (cloading) return;
 		setCloading(true);

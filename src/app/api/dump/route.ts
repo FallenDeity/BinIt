@@ -27,6 +27,8 @@ export async function POST(request: Request): Promise<NextResponse> {
 			},
 			include: {
 				user: true,
+				assignedTo: true,
+				completedBy: true,
 			},
 		});
 		await pusherServer.trigger("dump", "dump:new", {
